@@ -31,6 +31,8 @@ public interface ICameraHelper {
 
     void setPreviewSize(Size size);
 
+    void updateResolution(Size size);
+
     void addSurface(Object surface, boolean isRecordable);
 
     void removeSurface(Object surface);

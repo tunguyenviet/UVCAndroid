@@ -1,6 +1,7 @@
 package com.herohan.uvcapp;
 
 import android.content.Context;
+import android.hardware.usb.UsbDevice;
 import android.util.Log;
 import android.view.Surface;
 import android.widget.Toast;
@@ -127,6 +128,20 @@ final class CameraInternal implements ICameraInternal {
         try {
             mUVCCamera.setPreviewSize(size);
 
+            // Preview size may changed, so set the resolution and reinitialize video encoder and audio encoder of VideoCapture
+            mVideoCapture.setResolution(getPreviewSize());
+        } catch (final Exception e) {
+            Log.e(TAG, "setPreviewSize:", e);
+            // unexpectedly #setPreviewSize failed
+            mUVCCamera.destroy();
+            mUVCCamera = null;
+        }
+    }
+
+    @Override
+    public void updateResolution(Size size) {
+        if (DEBUG) Log.d(TAG, "setPreviewSize:" + size);
+        try {
             // Preview size may changed, so set the resolution and reinitialize video encoder and audio encoder of VideoCapture
             mVideoCapture.setResolution(getPreviewSize());
         } catch (final Exception e) {

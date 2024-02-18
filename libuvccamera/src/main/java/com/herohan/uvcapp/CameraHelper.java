@@ -157,6 +157,20 @@ public class CameraHelper implements ICameraHelper {
             }
         });
     }
+    @Override
+    public void updateResolution(Size size) {
+        if (DEBUG) Log.d(TAG, "updateResolution:" + size);
+        mAsyncHandler.post(() -> {
+            if (mService != null && mUsbDevice != null) {
+                try {
+                    mService.updateResolution(mUsbDevice, size);
+                } catch (final Exception e) {
+                    if (DEBUG) Log.e(TAG, "setPreviewSize:", e);
+                }
+            }
+        });
+    }
+
 
     private Object fetchSurface(final Object surface) {
         // check surface is valid or not

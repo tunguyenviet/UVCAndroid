@@ -2,24 +2,31 @@ package com.herohan.uvcdemo;
 
 import android.hardware.usb.UsbDevice;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SurfaceHolder;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.herohan.uvcapp.CameraHelper;
 import com.herohan.uvcapp.ICameraHelper;
+import com.herohan.uvcapp.VideoCapture;
 import com.herohan.uvcdemo.fragment.CameraControlsDialogFragment;
 import com.herohan.uvcdemo.fragment.VideoFormatDialogFragment;
 import com.serenegiant.opengl.renderer.MirrorMode;
 import com.serenegiant.usb.Size;
+import com.serenegiant.utils.FileUtils;
+import com.serenegiant.utils.UriHelper;
 import com.serenegiant.widget.AspectRatioSurfaceView;
 
+import java.io.File;
 import java.util.List;
 
 public class CustomPreviewActivity extends AppCompatActivity implements View.OnClickListener {
@@ -293,20 +300,60 @@ public class CustomPreviewActivity extends AppCompatActivity implements View.OnC
         if (mCameraHelper != null) {
             mCameraHelper.setPreviewConfig(
                     mCameraHelper.getPreviewConfig().setRotation(mPreviewRotation));
+            Size size = mCameraHelper.getPreviewSize();
+            int newWidth = size.height;
+            int newHeight = size.width;
+            size.width = newWidth;
+            size.height = newHeight;
+            mCameraHelper.updateResolution(size);
         }
     }
 
     private void flipHorizontally() {
-        if (mCameraHelper != null) {
-            mCameraHelper.setPreviewConfig(
-                    mCameraHelper.getPreviewConfig().setMirror(MirrorMode.MIRROR_HORIZONTAL));
-        }
+//        if (mCameraHelper != null) {
+//            mCameraHelper.setPreviewConfig(
+//                    mCameraHelper.getPreviewConfig().setMirror(MirrorMode.MIRROR_HORIZONTAL));
+//        }
+        File file = FileUtils.getCaptureFile(this, Environment.DIRECTORY_MOVIES, ".mp4");
+        VideoCapture.OutputFileOptions options =
+                new VideoCapture.OutputFileOptions.Builder(file).build();
+
+//        ContentValues contentValues = new ContentValues();
+//        contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, "NEW_VIDEO");
+//        contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "video/mp4");
+//
+//        VideoCapture.OutputFileOptions options = new VideoCapture.OutputFileOptions.Builder(
+//                getContentResolver(),
+//                MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+//                contentValues).build();
+
+        mCameraHelper.startRecording(options, new VideoCapture.OnVideoCaptureCallback() {
+            @Override
+            public void onStart() {
+            }
+
+            @Override
+            public void onVideoSaved(@NonNull VideoCapture.OutputFileResults outputFileResults) {
+                Toast.makeText(
+                        CustomPreviewActivity.this,
+                        "save \"" + UriHelper.getPath(CustomPreviewActivity.this, outputFileResults.getSavedUri()) + "\"",
+                        Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(int videoCaptureError, @NonNull String message, @Nullable Throwable cause) {
+
+            }
+        });
     }
 
     private void flipVertically() {
         if (mCameraHelper != null) {
-            mCameraHelper.setPreviewConfig(
-                    mCameraHelper.getPreviewConfig().setMirror(MirrorMode.MIRROR_VERTICAL));
+            mCameraHelper.stopRecording();
         }
+//        if (mCameraHelper != null) {
+//            mCameraHelper.setPreviewConfig(
+//                    mCameraHelper.getPreviewConfig().setMirror(MirrorMode.MIRROR_VERTICAL));
+//        }
     }
 }

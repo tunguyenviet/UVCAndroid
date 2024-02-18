@@ -262,6 +262,16 @@ class CameraConnectionService {
         }
 
         @Override
+        public void updateResolution(UsbDevice device, Size size) {
+            if (DEBUG) Log.d(TAG, LOG_PREFIX + "setPreviewSize:");
+            final CameraInternal cameraInternal = getCamera(device);
+            if (cameraInternal == null) {
+                throw new IllegalArgumentException("invalid device");
+            }
+            cameraInternal.updateResolution(size);
+        }
+
+        @Override
         public void addSurface(final UsbDevice device, final Object surface, final boolean isRecordable) {
             if (DEBUG)
                 Log.d(TAG, LOG_PREFIX + "addSurface:surface=" + surface);
