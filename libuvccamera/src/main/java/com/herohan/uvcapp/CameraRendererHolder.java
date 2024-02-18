@@ -13,14 +13,14 @@ import com.serenegiant.opengl.GLDrawer2D;
 import com.serenegiant.opengl.renderer.MirrorMode;
 import com.serenegiant.opengl.renderer.RendererHolder;
 import com.serenegiant.opengl.renderer.RendererHolderCallback;
-import com.serenegiant.uvccamera.BuildConfig;
+//import com.serenegiant.uvccamera.BuildConfig;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Arrays;
 
 class CameraRendererHolder extends RendererHolder implements ICameraRendererHolder {
-    private static final boolean DEBUG = BuildConfig.DEBUG;
+    private static final boolean DEBUG = false; //BuildConfig.DEBUG;
     private static final String TAG = CameraRendererHolder.class.getSimpleName();
 
     private CaptureHolder mCaptureHolder;

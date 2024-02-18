@@ -16,7 +16,7 @@ import com.serenegiant.usb.UVCCamera;
 import com.serenegiant.usb.UVCControl;
 import com.serenegiant.usb.UVCParam;
 import com.serenegiant.utils.UVCUtils;
-import com.serenegiant.uvccamera.BuildConfig;
+//import com.serenegiant.uvccamera.BuildConfig;
 import com.serenegiant.uvccamera.R;
 
 import java.lang.ref.WeakReference;
@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 final class CameraInternal implements ICameraInternal {
-    private static final boolean DEBUG = BuildConfig.DEBUG;
+    private static final boolean DEBUG = false; //BuildConfig.DEBUG;
     private static final String TAG = CameraInternal.class.getSimpleName();
 
     private static final String KEY_ARG_1 = "key_arg1";
@@ -143,7 +143,7 @@ final class CameraInternal implements ICameraInternal {
         if (DEBUG) Log.d(TAG, "setPreviewSize:" + size);
         try {
             // Preview size may changed, so set the resolution and reinitialize video encoder and audio encoder of VideoCapture
-            mVideoCapture.setResolution(getPreviewSize());
+            mVideoCapture.setResolution(size);
         } catch (final Exception e) {
             Log.e(TAG, "setPreviewSize:", e);
             // unexpectedly #setPreviewSize failed
